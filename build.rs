@@ -1,3 +1,6 @@
+use std::process::Command;
+
+// 重新编译只需要cargo build
 fn main() {
     let mut config = prost_build::Config::new();
     config.bytes(&["."]);
@@ -6,4 +9,11 @@ fn main() {
         .out_dir("src/pb")
         .compile_protos(&["abi.proto"], &["."])
         .unwrap();
+    Command::new("cargo")
+        .args(&["fmt", "--", "src/*.rs"])
+        .status()
+        .expect("cargo fmt failed");
+
+    println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-changed=abi.proto");
 }

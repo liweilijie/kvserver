@@ -14,7 +14,8 @@ async fn main() -> Result<()> {
     let stream = TcpStream::connect(addr).await?;
 
     // 使用 AsyncProstStream 来处理 TCP Frame
-    let mut client = AsyncProstStream::<_, CommandResponse, CommandRequest, _>::from(stream).for_async();
+    let mut client =
+        AsyncProstStream::<_, CommandResponse, CommandRequest, _>::from(stream).for_async();
 
     // 生成一个 HSET 命令
     let cmd = CommandRequest::new_hset("table1", "hello", "world".into());
