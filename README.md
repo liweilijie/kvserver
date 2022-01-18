@@ -68,3 +68,12 @@ key-value server by rust.
     }
     ```
 - 所以需要构建接口来消弭不稳定的因素，让不稳定的部分可以用一种稳定的方式来管理。
+- get_iter()时我们需要有一个能够完全占有 table 的迭代器。Rust 标准库里提供了一个 trait IntoIterator，它可以把数据结构的所有权转移到 Iterator 中，看它的声明
+  ```rust
+  pub trait IntoIterator {
+    type Item;
+    type IntoIter: Iterator<Item = Self::Item>;
+    
+    fn into_iter(self) -> Self::IntoIter;
+  }
+  ```

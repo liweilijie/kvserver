@@ -10,6 +10,7 @@ http = "0.2.6"
 prost = "0.9" # 处理 protobuf 的代码
 thiserror = "1.0.30"
 tracing = "0.1" # 日志处理
+sled = "0.34" # sled db
 
 [dev-dependencies]
 anyhow = "1" # 错误处理
