@@ -64,7 +64,6 @@ impl<Store: Storage> ServiceInner<Store> {
         self.on_after_send.push(f);
         self
     }
-
 }
 
 impl<Store: Storage> Service<Store> {
@@ -128,9 +127,9 @@ impl<Arg> Notify<Arg> for Vec<fn(&Arg)> {
 impl<Arg> NotifyMut<Arg> for Vec<fn(&mut Arg)> {
     #[inline]
     fn notify(&self, arg: &mut Arg) {
-       for f in self {
-           f(arg)
-       }
+        for f in self {
+            f(arg)
+        }
     }
 }
 
@@ -138,8 +137,8 @@ impl<Arg> NotifyMut<Arg> for Vec<fn(&mut Arg)> {
 mod tests {
     use super::*;
     use crate::{MemTable, Value};
-    use std::thread;
     use http::StatusCode;
+    use std::thread;
     use tracing::info;
 
     #[test]
@@ -178,7 +177,7 @@ mod tests {
         }
 
         let service: Service = ServiceInner::new(MemTable::default())
-            .fn_received(|_: &CommandRequest|{})
+            .fn_received(|_: &CommandRequest| {})
             .fn_received(b)
             .fn_executed(c)
             .fn_before_send(d)
