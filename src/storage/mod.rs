@@ -10,7 +10,12 @@ pub trait Storage {
     /// 从一个HashTable里获取一个key的value
     fn get(&self, table: &str, key: &str) -> Result<Option<Value>, KvError>;
     /// 从一个HashTable里设置一个key的value, 返回旧的value
-    fn set(&self, table: &str, key: impl Into<String>, value: impl Into<Value>) -> Result<Option<Value>, KvError>;
+    fn set(
+        &self,
+        table: &str,
+        key: impl Into<String>,
+        value: impl Into<Value>,
+    ) -> Result<Option<Value>, KvError>;
     /// 查看HashTable中是否有key
     fn contains(&self, table: &str, key: &str) -> Result<bool, KvError>;
     /// 从HashTable中删除一个key
@@ -96,28 +101,28 @@ mod tests {
         assert!(v.unwrap().is_none());
         // 再次set同样的key会更新,并返回之前的值
         let v1 = store.set("t1", "hello", "world1");
-        assert_eq!(v1, Ok(Some("world".into())));
+        assert_eq!(v1.unwrap(), Some("world".into()));
 
         // get 存在的key会得到最新的值
         let v = store.get("t1", "hello");
-        assert_eq!(v, Ok(Some("world1".into())));
+        assert_eq!(v.unwrap(), Some("world1".into()));
 
         // get 不存在的key或者table会返回None
-        assert_eq!(Ok(None), store.get("t1", "hello1"));
+        assert_eq!(None, store.get("t1", "hello1").unwrap());
         assert!(store.get("t2", "hello1").unwrap().is_none());
 
         // contains存在的key会返回true,否则false
-        assert_eq!(store.contains("t1", "hello"), Ok(true));
-        assert_eq!(store.contains("t1", "hello1"), Ok(false));
-        assert_eq!(store.contains("t2", "hello"), Ok(false));
+        assert!(store.contains("t1", "hello").unwrap());
+        assert!(!store.contains("t1", "hello1").unwrap());
+        assert!(!store.contains("t2", "hello").unwrap());
 
         // del存在的key返回之前的值
         let v = store.del("t1", "hello");
-        assert_eq!(v, Ok(Some("world1".into())));
+        assert_eq!(v.unwrap(), Some("world1".into()));
 
         // del 不存在的key或者table返回None
-        assert_eq!(Ok(None), store.del("t1", "hello1"));
-        assert_eq!(Ok(None), store.del("t2", "hello"));
+        assert_eq!(None, store.del("t1", "hello1").unwrap());
+        assert_eq!(None, store.del("t2", "hello").unwrap());
     }
 
     fn test_get_all(store: impl Storage) {
