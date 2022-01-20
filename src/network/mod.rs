@@ -1,8 +1,10 @@
 mod frame;
 mod tls;
 
-use bytes::BytesMut;
+pub use tls::{TlsClientConnector, TlsServerAcceptor};
 pub use frame::{read_frame, FrameCoder};
+
+use bytes::BytesMut;
 use tokio::io::{AsyncRead, AsyncWrite, AsyncWriteExt};
 use tracing::info;
 
